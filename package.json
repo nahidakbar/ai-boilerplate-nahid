@@ -1,0 +1,27 @@
+{
+  "name": "ai-boilerplate",
+  "version": "0.0.1",
+  "description": "ai experimentations",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jbn test",
+    "init": "jbn init -i babel",
+    "docs": "jbn docs",
+    "form": "jbn form",
+    "lint": "jbn lint",
+    "comp": "jbn comp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nahidakbar/node-ai-boilerplate-nahid.git"
+  },
+  "author": "Nahid Akbar <mail@nahidakbar.net> (http://nahidakbar.net/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nahidakbar/node-ai-boilerplate-nahid/issues"
+  },
+  "homepage": "https://github.com/nahidakbar/node-ai-boilerplate-nahid#readme",
+  "devDependencies": {
+    "jbn": "latest"
+  }
+}

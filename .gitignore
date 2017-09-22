@@ -1,0 +1,4 @@
+*.log
+node_*
+*-lock.json
+*.lock
