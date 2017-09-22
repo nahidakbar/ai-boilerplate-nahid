@@ -1,5 +1,8 @@
 "use strict";
 
+/**
+ * Basic uninformed graph search.
+ */
 module.exports.graphSearch = function (paramaters)
 {
   return async function (problem)

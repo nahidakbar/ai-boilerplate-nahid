@@ -1,5 +1,11 @@
 "use strict";
 
+
+/**
+ * Does breath first tree search.
+ * 
+ * Needless to say, it is only suitable for tree structures as it does not take repeated states into account. For graphs, it will run until it runs iut of memory.
+ */
 module.exports.treeSearch = function (paramaters)
 {
   return function (problem)
