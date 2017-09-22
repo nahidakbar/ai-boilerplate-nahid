@@ -1,6 +1,6 @@
 "use strict";
 
-class SlidingBlockPuzzle
+module.exports.SlidingBlockPuzzle = class
 {
   /**
    * @param {number} width
@@ -117,5 +117,3 @@ class SlidingBlockPuzzle
   }
 
 }
-
-module.exports.SlidingBlockPuzzle = SlidingBlockPuzzle;
