@@ -22,7 +22,7 @@ describe('queues', function ()
 
     let output = [];
 
-    while (!queue.queueEmpty(instance))
+    while (!queue.queueIsEmpty(instance))
     {
       output.push(queue.queuePop(instance));
     }
