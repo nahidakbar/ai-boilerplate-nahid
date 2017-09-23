@@ -15,16 +15,16 @@ module.exports.SlidingBlockPuzzle = class
   createRandomInitialState()
   {
     let state = this.createGoalState();
-    
+
     let steps = 50;
-    
-    while (steps --> 0)
+
+    while (steps-- > 0)
     {
       let actions = this.getActions(state);
       let action = actions[Math.floor(actions.length * Math.random())];
       state = this.performAction(state, action);
     }
-    
+
     return state;
   }
 
@@ -110,7 +110,7 @@ module.exports.SlidingBlockPuzzle = class
 
     return state;
   }
-  
+
   serialise(state)
   {
     return Array.prototype.join.call(state, ',');

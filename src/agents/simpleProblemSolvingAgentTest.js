@@ -41,10 +41,10 @@ describe(`simpleProblemSolvingAgent`, function ()
     }
     //~ console.log('FINAL STATE:\n' + puzzle.print(paramaters.state));
     return paramaters.state;
-    
+
   }
-  
-  
+
+
   it(`solve sliding puzzle`, async function ()
   {
     const puzzle = new SlidingBlockPuzzle(3, 3);
