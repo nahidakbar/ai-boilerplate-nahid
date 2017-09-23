@@ -10,21 +10,33 @@
  * <li> Priority queues
  */
 
-function queueEmpty(queue)
+/**
+ * queue empty test
+ */
+function queueIsEmpty(queue)
 {
   return !queue || !queue.length;
 }
 
+/**
+ * array.pop
+ */
 function lifoQueuePop(queue)
 {
   return queue.pop()
 }
 
+/**
+ * array.shift
+ */
 function fifoQueuePop(queue)
 {
   return queue.shift()
 }
 
+/**
+ * array.push
+ */
 function queueInsert(element, queue)
 {
   if (!queue)
@@ -38,6 +50,9 @@ function queueInsert(element, queue)
   }
 }
 
+/**
+ * array.push + sift-up
+ */
 function priorityQueueInsert(isAbove)
 {
   return function (element, queue)
@@ -55,6 +70,9 @@ function priorityQueueInsert(isAbove)
   }
 }
 
+/**
+ * sift-up implementation
+ */
 function heapSiftUp(heap, index, isAbove)
 {
   if (index !== 0)
@@ -70,6 +88,9 @@ function heapSiftUp(heap, index, isAbove)
   }
 }
 
+/**
+ * sift-down implementation
+ */
 function heapSiftDown(heap, index, isAbove)
 {
   const leftIndex = index << 1;
@@ -106,6 +127,9 @@ function heapSiftDown(heap, index, isAbove)
   }
 }
 
+/**
+ * array.shift + array.pop + array.unshift + shft-down
+ */
 function priorityQueuePop(isAbove)
 {
   return function (queue)
@@ -122,30 +146,29 @@ function priorityQueuePop(isAbove)
  * plain array; uses array.pop for popping
  */
 module.exports.lifoQueue = {
-  queueEmpty: queueEmpty,
+  queueIsEmpty: queueIsEmpty,
   queuePop: lifoQueuePop,
   queueInsert: queueInsert,
 }
 
 /**
  * plain array; uses array.shift for popping
- * @typedef {object} fifoQueue
  */
 module.exports.fifoQueue = {
-  queueEmpty: queueEmpty,
+  queueIsEmpty: queueIsEmpty,
   queuePop: fifoQueuePop,
   queueInsert: queueInsert,
 }
 
 /**
  * binary max heap array
- * @param {function(element, aboveElement):boolean} isAbove order function for priority queue
- * @reutn {object} priorityQueue functions
+ * @param {function(element:object, aboveElement:object):boolean} isAbove order function for priority queue
+ * @reutn {object} will return an object similar to lifo/fifoQueue
  */
 module.exports.priorityQueue = function (isAbove)
 {
   return {
-    queueEmpty: queueEmpty,
+    queueIsEmpty: queueIsEmpty,
     queuePop: priorityQueuePop(isAbove),
     queueInsert: priorityQueueInsert(isAbove),
   };
