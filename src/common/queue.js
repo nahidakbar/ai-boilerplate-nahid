@@ -140,7 +140,7 @@ module.exports.fifoQueue = {
 /**
  * binary max heap array
  * @param {function(element, aboveElement):boolean} isAbove order function for priority queue
- * @reutn {Queue} queue functions
+ * @reutn {object} priorityQueue functions
  */
 module.exports.priorityQueue = function (isAbove)
 {
