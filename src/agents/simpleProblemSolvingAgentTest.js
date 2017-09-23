@@ -12,6 +12,11 @@ const
 {
   SlidingBlockPuzzle
 } = require('../games/SlidingBlockPuzzle');
+const
+{
+  fifoQueue
+} = require('../common/queue');
+
 const assert = require('assert');
 
 describe(`simpleProblemSolvingAgent`, function ()
@@ -20,7 +25,7 @@ describe(`simpleProblemSolvingAgent`, function ()
   {
     // prepare paramaters for search agent
     const formulateGoal = puzzle.createGoalState.bind(puzzle);
-    const search = searchMethod(puzzle);
+    const search = searchMethod(Object.assign(puzzle, fifoQueue));
     const paramaters = {
       state,
       formulateGoal,

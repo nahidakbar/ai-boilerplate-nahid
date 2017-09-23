@@ -7,16 +7,16 @@ module.exports.graphSearch = function (paramaters)
 {
   return async function (problem)
   {
-    const frontier = [{
+    let frontier = paramaters.queueInsert({
       state: problem.state,
       steps: [],
       serialised: paramaters.serialise(problem.state)
-    }];
+    }, null);
     const explored = {};
     const goal = problem.goal || paramaters.goal;
     while (frontier.length > 0)
     {
-      const leaf = frontier.shift();
+      const leaf = paramaters.queuePop(frontier);
       if (paramaters.isGoalState(leaf.state, goal))
       {
         return leaf.steps;
@@ -31,11 +31,11 @@ module.exports.graphSearch = function (paramaters)
         const serialised = paramaters.serialise(resultingState);
         if (explored[serialised] === undefined)
         {
-          frontier.push({
+          frontier = paramaters.queueInsert({
             state: resultingState,
             steps: leaf.steps.concat([action]),
             serialised: serialised
-          });
+          }, frontier);
         }
       }
     }
