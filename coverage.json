@@ -1,0 +1,48 @@
+{
+  "coverage": "59.37%",
+  "expectCount": 32,
+  "actualCount": 19,
+  "files": {
+    "node-ai-boilerplate-nahid/src/agents/simpleProblemSolvingAgent.js": {
+      "expectCount": 4,
+      "actualCount": 3,
+      "undocumentLines": [
+        3
+      ]
+    },
+    "node-ai-boilerplate-nahid/src/common/queue.js": {
+      "expectCount": 11,
+      "actualCount": 11,
+      "undocumentLines": []
+    },
+    "node-ai-boilerplate-nahid/src/common/sequence.js": {
+      "expectCount": 3,
+      "actualCount": 3,
+      "undocumentLines": []
+    },
+    "node-ai-boilerplate-nahid/src/games/SlidingBlockPuzzle.js": {
+      "expectCount": 11,
+      "actualCount": 1,
+      "undocumentLines": [
+        3,
+        11,
+        12,
+        15,
+        31,
+        45,
+        60,
+        72,
+        102,
+        114
+      ]
+    },
+    "node-ai-boilerplate-nahid/src/search/graphSearch.js": {
+      "expectCount": 3,
+      "actualCount": 1,
+      "undocumentLines": [
+        52,
+        66
+      ]
+    }
+  }
+}

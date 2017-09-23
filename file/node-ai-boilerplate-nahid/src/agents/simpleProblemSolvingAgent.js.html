@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">node-ai-boilerplate-nahid/src/agents/simpleProblemSolvingAgent.js | ai-boilerplate</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="ai experimentations"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ai-boilerplate"><meta property="twitter:description" content="ai experimentations"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/nahidakbar/node-ai-boilerplate-nahid"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#src-agents">src/agents</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-simpleProblemSolvingAgent">simpleProblemSolvingAgent</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#src-common">src/common</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-priorityQueue">priorityQueue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sequenceFirst">sequenceFirst</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sequenceIsEmpty">sequenceIsEmpty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sequenceRest">sequenceRest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fifoQueue">fifoQueue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-lifoQueue">lifoQueue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Queue">Queue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Sequence">Sequence</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#src-games">src/games</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/node-ai-boilerplate-nahid/src/games/SlidingBlockPuzzle.js~SlidingBlockPuzzle.html">SlidingBlockPuzzle</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#src-search">src/search</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-graphSearch">graphSearch</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">node-ai-boilerplate-nahid/src/agents/simpleProblemSolvingAgent.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&quot;use strict&quot;;
+
+const
+{
+  sequenceIsEmpty,
+  sequenceFirst,
+  sequenceRest
+} = require(&apos;../common/sequence&apos;);
+
+/**
+ * Simple problem solving agent.
+ * 
+ * Defines problem based on state of the world, searches for a sequence of steps to solve it and execute said sequence of steps.
+ * 
+ * It is a open loop system - ignores precepts during execution phase. I.e, it is only good for static, discrete, observable, deterministic systems. 
+ * 
+ * @param {object} parameters
+ * @param {State} parameters.state initial state
+ * @param {function(state:State, percept:Percept):State} [parameters.updateState] function to update parameters
+ * @param {function(state:State):Goal} parameters.formulateGoal function to formulate goal from current state
+ * @param {function(state:State,goal:Goal):Problem} [parameters.formulateProblem] function to formulate problem object from state and goal. By default it just puts state and goal into an object.
+ * @param {function(problem:Problem):Sequence} parameters.search search for solution to problem
+ * @return {function(percept:Percept):Action} an agent function
+ */
+module.exports.simpleProblemSolvingAgent = function (parameters)
+{
+  parameters.updateState = parameters.updateState || defaultUpdateState;
+  parameters.formulateProblem = parameters.formulateProblem || defaultFormulateProblem;
+  return async function (percept)
+  {
+    parameters.state = await parameters.updateState(parameters.state, percept);
+    if (sequenceIsEmpty(parameters.sequence))
+    {
+      const goal = await parameters.formulateGoal(parameters.state);
+      const problem = await parameters.formulateProblem(parameters.state, goal);
+      parameters.sequence = await parameters.search(problem)
+    }
+    if (sequenceIsEmpty(parameters.sequence))
+    {
+      return null;
+    }
+    else
+    {
+      const action = sequenceFirst(parameters.sequence);
+      parameters.sequence = sequenceRest(parameters.sequence);
+      return action;
+    }
+  };
+}
+
+/**
+ * @private
+ */
+function defaultUpdateState(state, percept)
+{
+  return state;
+}
+
+/**
+ * @private
+ */
+function defaultFormulateProblem(state, goal)
+{
+  return {
+    state,
+    goal
+  };
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.3)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

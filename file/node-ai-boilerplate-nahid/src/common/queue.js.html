@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">node-ai-boilerplate-nahid/src/common/queue.js | ai-boilerplate</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="ai experimentations"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ai-boilerplate"><meta property="twitter:description" content="ai experimentations"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/nahidakbar/node-ai-boilerplate-nahid"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#src-agents">src/agents</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-simpleProblemSolvingAgent">simpleProblemSolvingAgent</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#src-common">src/common</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-priorityQueue">priorityQueue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sequenceFirst">sequenceFirst</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sequenceIsEmpty">sequenceIsEmpty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sequenceRest">sequenceRest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fifoQueue">fifoQueue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-lifoQueue">lifoQueue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Queue">Queue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Sequence">Sequence</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#src-games">src/games</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/node-ai-boilerplate-nahid/src/games/SlidingBlockPuzzle.js~SlidingBlockPuzzle.html">SlidingBlockPuzzle</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#src-search">src/search</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-graphSearch">graphSearch</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">node-ai-boilerplate-nahid/src/common/queue.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&quot;use strict&quot;;
+
+/**
+ * @typedef {Array} Queue
+ * @desc Queues are Arrays in this codebase.
+ * 
+ * Three types of queues are available:
+ * &lt;li&gt; FIFO queues
+ * &lt;li&gt; LIFO queues
+ * &lt;li&gt; Priority queues
+ */
+
+/**
+ * queue empty test
+ */
+function queueIsEmpty(queue)
+{
+  return !queue || !queue.length;
+}
+
+/**
+ * array.pop
+ */
+function lifoQueuePop(queue)
+{
+  return queue.pop()
+}
+
+/**
+ * array.shift
+ */
+function fifoQueuePop(queue)
+{
+  return queue.shift()
+}
+
+/**
+ * array.push
+ */
+function queueInsert(element, queue)
+{
+  if (!queue)
+  {
+    return [element];
+  }
+  else
+  {
+    queue.push(element);
+    return queue;
+  }
+}
+
+/**
+ * array.push + sift-up
+ */
+function priorityQueueInsert(isAbove)
+{
+  return function (element, queue)
+  {
+    if (!queue)
+    {
+      return [element];
+    }
+    else
+    {
+      queue.push(element);
+      heapSiftUp(queue, queue.length - 1, isAbove);
+      return queue;
+    }
+  }
+}
+
+/**
+ * sift-up implementation
+ */
+function heapSiftUp(heap, index, isAbove)
+{
+  if (index !== 0)
+  {
+    const parentIndex = index &gt;&gt; 1;
+    if (isAbove(heap[index], heap[parentIndex]))
+    {
+      const tmp = heap[parentIndex];
+      heap[parentIndex] = heap[index];
+      heap[index] = tmp;
+      heapSiftUp(heap, parentIndex, isAbove);
+    }
+  }
+}
+
+/**
+ * sift-down implementation
+ */
+function heapSiftDown(heap, index, isAbove)
+{
+  const leftIndex = index &lt;&lt; 1;
+  const rightIndex = leftIndex + 1;
+  let maxIndex;
+  if (rightIndex &gt;= heap.length)
+  {
+    if (leftIndex &gt;= heap.length)
+    {
+      return;
+    }
+    else
+    {
+      maxIndex = leftIndex;
+    }
+  }
+  else
+  {
+    if (isAbove(heap[leftIndex], heap[rightIndex]))
+    {
+      maxIndex = leftIndex;
+    }
+    else
+    {
+      maxIndex = rightIndex;
+    }
+  }
+  if (isAbove(heap[maxIndex], heap[index]))
+  {
+    const temp = heap[index];
+    heap[index] = heap[maxIndex];
+    heap[maxIndex] = temp;
+    heapSiftDown(heap, maxIndex, isAbove)
+  }
+}
+
+/**
+ * array.shift + array.pop + array.unshift + shft-down
+ */
+function priorityQueuePop(isAbove)
+{
+  return function (queue)
+  {
+    let highest = queue[0];
+    queue[0] = queue[queue.length - 1];
+    queue.pop();
+    heapSiftDown(queue, 0, isAbove);
+    return highest;
+  };
+}
+
+/**
+ * plain array; uses array.pop for popping
+ */
+module.exports.lifoQueue = {
+  queueIsEmpty: queueIsEmpty,
+  queuePop: lifoQueuePop,
+  queueInsert: queueInsert,
+}
+
+/**
+ * plain array; uses array.shift for popping
+ */
+module.exports.fifoQueue = {
+  queueIsEmpty: queueIsEmpty,
+  queuePop: fifoQueuePop,
+  queueInsert: queueInsert,
+}
+
+/**
+ * binary max heap array
+ * @param {function(element:object, aboveElement:object):boolean} isAbove order function for priority queue
+ * @reutn {object} will return an object similar to lifo/fifoQueue
+ */
+module.exports.priorityQueue = function (isAbove)
+{
+  return {
+    queueIsEmpty: queueIsEmpty,
+    queuePop: priorityQueuePop(isAbove),
+    queueInsert: priorityQueueInsert(isAbove),
+  };
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.3)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
