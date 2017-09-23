@@ -2,6 +2,7 @@
 
 /**
  * Basic uninformed graph search.
+ * @param {object} paramaters
  */
 module.exports.graphSearch = function (paramaters)
 {
@@ -10,7 +11,7 @@ module.exports.graphSearch = function (paramaters)
     let frontier = paramaters.queueInsert({
       state: problem.state,
       steps: [],
-      serialised: paramaters.serialise(problem.state)
+      stateSerialised: paramaters.stateSerialise(problem.state)
     }, null);
     const explored = {};
     const goal = problem.goal || paramaters.goal;
@@ -23,18 +24,18 @@ module.exports.graphSearch = function (paramaters)
       }
       else
       {
-        explored[leaf.serialised] = true;
+        explored[leaf.stateSerialised] = true;
       }
       for (let action of paramaters.getActions(leaf.state))
       {
         const resultingState = paramaters.performAction(leaf.state, action);
-        const serialised = paramaters.serialise(resultingState);
-        if (explored[serialised] === undefined)
+        const stateSerialised = paramaters.stateSerialise(resultingState);
+        if (explored[stateSerialised] === undefined)
         {
           frontier = paramaters.queueInsert({
             state: resultingState,
             steps: leaf.steps.concat([action]),
-            serialised: serialised
+            stateSerialised: stateSerialised
           }, frontier);
         }
       }

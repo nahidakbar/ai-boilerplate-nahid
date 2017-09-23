@@ -111,7 +111,7 @@ module.exports.SlidingBlockPuzzle = class
     return state;
   }
 
-  serialise(state)
+  stateSerialise(state)
   {
     return Array.prototype.join.call(state, ',');
   }
